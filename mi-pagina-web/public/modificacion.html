@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Modificación de Botes</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f3f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ffc107;
+      color: #212529;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+    form input[type="text"],
+    form input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    form label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
+    }
+    form input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #ffc107;
+      color: #212529;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    form button:hover {
+      background-color: #e0a800;
+    }
+    .volver {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .volver button {
+      background-color: #6c757d;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .volver button:hover {
+      background-color: #5a6268;
+    }
+    .campo {
+      display: none;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Modificación de Botes</h1>
+  </header>
+  <main>
+    <form id="formModificacion">
+      <label for="id">ID del Bote a modificar:</label>
+      <input type="text" id="id" name="id" required />
+
+      <label>Selecciona los campos a modificar:</label>
+      <div><input type="checkbox" id="checkUbicacion" /> Ubicación</div>
+      <div><input type="checkbox" id="checkTipoResiduo" /> Tipo de residuo</div>
+      <div><input type="checkbox" id="checkCapacidad" /> Capacidad</div>
+
+      <div id="campoUbicacion" class="campo">
+        <label>Nueva Ubicación:</label>
+        <input type="text" id="ubicacion" />
+      </div>
+
+      <div id="campoTipoResiduo" class="campo">
+        <label>Nuevo Tipo de Residuo:</label>
+        <input type="text" id="tipoResiduo" />
+      </div>
+
+      <div id="campoCapacidad" class="campo">
+        <label>Nueva Capacidad (litros):</label>
+        <input type="number" id="capacidad" min="0" />
+      </div>
+
+      <button type="submit">Modificar Bote</button>
+    </form>
+
+    <div class="volver">
+      <button onclick="window.location.href='index.html'">Volver al Menú Principal</button>
+    </div>
+  </main>
+
+  <script>
+    // Mostrar/ocultar campos según selección
+    document.getElementById('checkUbicacion').addEventListener('change', (e) => {
+      document.getElementById('campoUbicacion').style.display = e.target.checked ? 'block' : 'none';
+    });
+    document.getElementById('checkTipoResiduo').addEventListener('change', (e) => {
+      document.getElementById('campoTipoResiduo').style.display = e.target.checked ? 'block' : 'none';
+    });
+    document.getElementById('checkCapacidad').addEventListener('change', (e) => {
+      document.getElementById('campoCapacidad').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+    // Enviar solo lo seleccionado
+    document.getElementById('formModificacion').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const id = document.getElementById('id').value;
+      const datos = {};
+
+      if (document.getElementById('checkUbicacion').checked) {
+        datos.ubicacion = document.getElementById('ubicacion').value;
+      }
+      if (document.getElementById('checkTipoResiduo').checked) {
+        datos.tipoResiduo = document.getElementById('tipoResiduo').value;
+      }
+      if (document.getElementById('checkCapacidad').checked) {
+        datos.capacidad = Number(document.getElementById('capacidad').value);
+      }
+
+      if (Object.keys(datos).length === 0) {
+        alert('Selecciona al menos un campo para modificar.');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/botes/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datos)
+        });
+
+        if (!res.ok) throw new Error('Error al modificar bote');
+
+        alert('Bote modificado exitosamente');
+        e.target.reset();
+        document.querySelectorAll('.campo').forEach(div => div.style.display = 'none');
+        document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>

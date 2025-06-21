@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Baja de Botes</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f3f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #dc3545;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      max-width: 500px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+    form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    form button:hover {
+      background-color: #c82333;
+    }
+    .volver {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .volver button {
+      background-color: #6c757d;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .volver button:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Baja de Botes</h1>
+  </header>
+  <main>
+    <form id="formBaja">
+      <label for="id">ID del Bote a eliminar:</label>
+      <input type="text" id="id" name="id" required />
+      <button type="submit">Eliminar Bote</button>
+    </form>
+    <div class="volver">
+      <button onclick="window.location.href='index.html'">Volver al Menú Principal</button>
+    </div>
+  </main>
+
+  <script>
+    const formBaja = document.getElementById('formBaja');
+
+    formBaja.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const id = document.getElementById('id').value;
+
+      try {
+        const res = await fetch(`/botes/${id}`, {
+          method: 'DELETE'
+        });
+
+        if (!res.ok) throw new Error('Error al eliminar bote');
+
+        alert('Bote eliminado exitosamente');
+        formBaja.reset();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>

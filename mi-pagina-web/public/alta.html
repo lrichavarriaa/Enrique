@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Alta de Botes</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f3f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #28a745;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      max-width: 500px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+    form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    form button:hover {
+      background-color: #218838;
+    }
+    .volver {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .volver button {
+      background-color: #6c757d;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .volver button:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Alta de Botes</h1>
+  </header>
+  <main>
+    <form id="formAlta">
+      <input type="text" name="ubicacion" placeholder="Ubicación del bote" required />
+      <input type="text" name="tipoResiduos" placeholder="Tipo de residuos" required />
+      <input type="text" name="capacidad" placeholder="Capacidad (Litros)" required />
+      <button type="submit">Registrar Bote</button>
+    </form>
+    <div class="volver">
+      <button onclick="window.location.href='index.html'">Volver al Menú Principal</button>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('formAlta').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        ubicacion: e.target.ubicacion.value,
+        tipoResiduos: e.target.tipoResiduos.value,
+        capacidad: e.target.capacidad.value
+      };
+      const res = await fetch('/botes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      alert('Bote registrado con ID: ' + result._id);
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>
